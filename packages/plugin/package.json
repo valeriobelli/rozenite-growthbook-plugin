@@ -2,7 +2,20 @@
   "name": "rozenite-growthbook-plugin",
   "version": "0.1.0",
   "description": "Rozenite DevTools plugin for GrowthBook feature flags and experiments",
+  "keywords": [
+    "devtools",
+    "experiments",
+    "feature-flags",
+    "growthbook",
+    "react-native",
+    "rozenite"
+  ],
+  "homepage": "https://github.com/valeriobelli/rozenite-growthbook-plugin",
+  "bugs": {
+    "url": "https://github.com/valeriobelli/rozenite-growthbook-plugin/issues"
+  },
   "license": "MIT",
+  "author": "Valerio Belli",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/valeriobelli/rozenite-growthbook-plugin.git"
@@ -19,6 +32,10 @@
       "import": "./dist/react-native.js",
       "require": "./dist/react-native.cjs"
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "rozenite build",
