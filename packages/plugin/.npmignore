@@ -1,0 +1,6 @@
+src/
+*.config.*
+tsconfig.json
+oxlint.json
+.gitignore
+.claude/

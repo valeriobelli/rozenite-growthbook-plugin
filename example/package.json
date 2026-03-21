@@ -1,0 +1,25 @@
+{
+  "name": "growthbook-plugin-example",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "WITH_ROZENITE=true expo start",
+    "android": "WITH_ROZENITE=true expo run:android",
+    "ios": "WITH_ROZENITE=true expo run:ios"
+  },
+  "dependencies": {
+    "@growthbook/growthbook-react": "^1.6.5",
+    "expo": "~55.0.8",
+    "react": "^19.2.0",
+    "react-native": "~0.83.1",
+    "react-native-safe-area-context": "5.7.0",
+    "rozenite-growthbook-plugin": "workspace:*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@rozenite/metro": "^1.4.0",
+    "@types/react": "^19.2.14",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "react-native-best-practices": {
+      "source": "callstackincubator/agent-skills",
+      "sourceType": "github",
+      "computedHash": "5e6ae387e9c06433315d133d9e0955c4b5efedc9f3e7137f4e824be3b121b828"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "c858d2d9023e73edb4e5504868cb0e36313e58fd56af12ef888b43c5634a3c17"
+    }
+  }
+}

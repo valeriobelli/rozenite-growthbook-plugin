@@ -1,0 +1,53 @@
+{
+  "name": "rozenite-growthbook-plugin",
+  "version": "0.0.0",
+  "description": "Rozenite DevTools plugin for GrowthBook feature flags and experiments",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valeriobelli/rozenite-growthbook-plugin.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-native.cjs",
+  "module": "./dist/react-native.js",
+  "types": "./dist/react-native.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/react-native.d.ts",
+      "import": "./dist/react-native.js",
+      "require": "./dist/react-native.cjs"
+    }
+  },
+  "scripts": {
+    "build": "rozenite build",
+    "dev": "rozenite dev",
+    "lint": "oxlint -c ../../.oxlintrc.json ./src",
+    "fmt": "oxfmt ./src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rozenite/plugin-bridge": "^1.4.0",
+    "arktype": "^2.2.0"
+  },
+  "devDependencies": {
+    "@rozenite/vite-plugin": "^1.4.0",
+    "@types/react": "^19.2.14",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-native": "^0.84.1",
+    "react-native-web": "^0.21.2",
+    "rozenite": "^1.4.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  },
+  "peerDependencies": {
+    "@growthbook/growthbook": ">=1.0.0",
+    "react": "*",
+    "react-native": "*"
+  }
+}

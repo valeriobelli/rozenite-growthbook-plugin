@@ -1,0 +1,29 @@
+{
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Write|Edit",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "jq -r '.tool_input.file_path' | { read -r f; case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.mts) pnpm oxfmt --write \"$f\" 2>/dev/null ;; esac; }",
+						"timeout": 10,
+						"statusMessage": "Formatting..."
+					},
+					{
+						"type": "command",
+						"command": "jq -r '.tool_input.file_path' | { read -r f; case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.mts) OUTPUT=$(pnpm oxlint \"$f\" 2>&1); if [ $? -ne 0 ] || echo \"$OUTPUT\" | grep -q 'Found [1-9]'; then echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"oxlint output for $f:\\n$OUTPUT\\\"}}\"; fi ;; esac; }",
+						"timeout": 15,
+						"statusMessage": "Linting..."
+					},
+					{
+						"type": "command",
+						"command": "jq -r '.tool_input.file_path' | { read -r f; case \"$f\" in *.ts|*.tsx|*.mts) OUTPUT=$(pnpm --filter rozenite-growthbook-plugin typecheck 2>&1); if [ $? -ne 0 ]; then echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"TypeScript errors:\\n$OUTPUT\\\"}}\"; fi ;; esac; }",
+						"timeout": 30,
+						"statusMessage": "Type checking..."
+					}
+				]
+			}
+		]
+	}
+}

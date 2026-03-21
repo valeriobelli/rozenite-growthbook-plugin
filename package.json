@@ -1,0 +1,30 @@
+{
+  "name": "rozenite-growthbook-plugin-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "android:example": "pnpm --filter growthbook-plugin-example android",
+    "build": "pnpm --filter rozenite-growthbook-plugin build",
+    "dev": "pnpm --filter rozenite-growthbook-plugin dev",
+    "format": "oxfmt ./packages ./example/src",
+    "format:check": "oxfmt --check ./packages ./example/src",
+    "ios:example": "pnpm --filter growthbook-plugin-example ios",
+    "knip": "knip",
+    "lint": "oxlint ./packages ./example/src",
+    "prepare": "lefthook install",
+    "start:example": "pnpm --filter growthbook-plugin-example start",
+    "typecheck": "pnpm --filter rozenite-growthbook-plugin typecheck"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.30.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/types": "^20.5.0",
+    "knip": "^6.0.1",
+    "lefthook": "^2.1.4",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.55.0",
+    "oxlint-tsgolint": "^0.17.1"
+  },
+  "packageManager": "pnpm@10.32.1"
+}
