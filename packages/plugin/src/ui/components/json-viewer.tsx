@@ -1,11 +1,3 @@
-import { useState } from 'react'
-
-type JsonViewerProps = {
-	data: unknown
-	depth?: number
-	maxDepth?: number
-}
-
 const getValueColor = (value: unknown) => {
 	if (value === null || value === undefined) {
 		return 'text-value-null'
@@ -40,69 +32,6 @@ const formatValue = (value: unknown) => {
 	}
 
 	return JSON.stringify(value)
-}
-
-export const JsonViewer = ({ data, depth = 0, maxDepth = 5 }: JsonViewerProps) => {
-	const [expanded, setExpanded] = useState(depth < 2)
-
-	if (data === null || data === undefined || typeof data !== 'object') {
-		return <span className={getValueColor(data)}>{formatValue(data)}</span>
-	}
-
-	const isArray = Array.isArray(data)
-	const entries: [string, unknown][] = Object.entries(data)
-
-	const openBracket = isArray ? '[' : '{'
-	const closeBracket = isArray ? ']' : '}'
-
-	if (entries.length === 0) {
-		return (
-			<span className="text-panel-text-secondary">
-				{openBracket}
-				{closeBracket}
-			</span>
-		)
-	}
-
-	if (depth >= maxDepth) {
-		return (
-			<span className="text-panel-text-secondary">
-				{openBracket}...{closeBracket}
-			</span>
-		)
-	}
-
-	return (
-		<span>
-			<button
-				type="button"
-				className="text-panel-text-secondary hover:text-panel-text"
-				onClick={() => {
-					setExpanded(!expanded)
-				}}>
-				{expanded ? '▾' : '▸'} {openBracket}
-			</button>
-			{expanded ? (
-				<>
-					<div className="ml-4">
-						{entries.map(([key, entryValue]) => (
-							<div key={key}>
-								<span className="text-panel-accent">{key}</span>
-								<span className="text-panel-text-secondary">: </span>
-								<JsonViewer data={entryValue} depth={depth + 1} maxDepth={maxDepth} />
-							</div>
-						))}
-					</div>
-					<span className="text-panel-text-secondary">{closeBracket}</span>
-				</>
-			) : (
-				<span className="text-panel-text-secondary">
-					{entries.length} {isArray ? 'items' : 'keys'}
-					{closeBracket}
-				</span>
-			)}
-		</span>
-	)
 }
 
 export const InlineValue = ({ value }: { value: unknown }) => {
