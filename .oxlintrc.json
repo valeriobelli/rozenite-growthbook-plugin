@@ -1,6 +1,7 @@
 {
 	"$schema": "node_modules/oxlint/configuration_schema.json",
 	"rules": {
+		"arrow-body-style": ["error", "as-needed"],
 		"curly": ["error", "multi-line", "consistent"],
 		"eqeqeq": "error",
 		"exhaustive-deps": "error",
@@ -10,7 +11,7 @@
 		"max-lines": "off",
 		"no-console": "warn",
 		"no-debugger": "error",
-		"no-duplicate-imports": "error",
+		"no-duplicate-imports": ["error", { "allowSeparateTypeImports": true}],
 		"no-implicit-coercion": "warn",
 		"no-negated-condition": "off",
 		"no-shadow": "error",
@@ -24,6 +25,7 @@
 		"react/jsx-props-no-spread-multi": "error",
 		"react/react-in-jsx-scope": "off",
 		"sort-keys": ["error", "asc", { "caseSensitive": true, "minKeys": 1, "natural": false }],
+		"strict-boolean-expressions": "off",
 		"typescript/consistent-type-imports": "error",
 		"typescript/no-explicit-any": "error",
 		"typescript/no-floating-promises": "error",
