@@ -47,15 +47,9 @@ Look into the `package.json` files to understand the packages interface.
 
 ## Contributing
 
-Contributions are welcome. Bug fixes, new features, docs improvements — all good.
+Contributions are welcome. Bug fixes, new features, docs improvements.
 
-The general flow:
-
-1. Fork the repo and create a branch from `main`
-2. Make your changes
-3. Make sure `pnpm typecheck`, `pnpm lint`, and `pnpm format:check` all pass
-4. Use [conventional commits](https://www.conventionalcommits.org) for your commit messages (enforced by commitlint)
-5. Open a pull request
+Use [conventional commits](https://www.conventionalcommits.org) for your commit messages (enforced by commitlint)
 
 If you're planning something big, open an issue first so we can discuss it.
 
