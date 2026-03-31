@@ -86,3 +86,60 @@ function Foo() {
   return bar()
 }
 ```
+
+### Prefer arrow functions for components
+
+#### Bad
+
+```typescript
+function Component() {
+  return (
+    <div>bar</div>
+  )
+}
+
+function Component() {
+  const memoizedValue = useMemo(() => 'bar', [])
+
+  return (
+    <div>{memoizedValue}</div>
+  )
+}
+```
+
+#### Correct
+
+```typescript
+const Component = () => <div>bar</div>
+
+const Component = () => {
+  const memoizedValue = useMemo(() => 'bar', [])
+
+  return (
+    <div>{memoizedValue}</div>
+  )
+}
+```
+
+### Prefer separated Component's props definition
+
+#### Bad
+
+```typescript
+const Component = (props: { foo: string; bar: number }) => {
+  ...
+}
+```
+
+#### Correct
+
+```typescript
+interface Props {
+  foo: string
+  bar: number
+}
+
+const Component = (props: Props) => {
+  ...
+}
+```
