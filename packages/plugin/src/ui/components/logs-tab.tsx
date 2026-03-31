@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { DebugLogEntry } from '../../shared/types'
 
@@ -9,7 +9,7 @@ type LogsTabProps = {
 	onClear: () => void
 }
 
-function formatTimestamp(ts: number): string {
+const formatTimestamp = (ts: number): string => {
 	const date = new Date(ts)
 
 	return date.toLocaleTimeString(undefined, {
@@ -19,7 +19,7 @@ function formatTimestamp(ts: number): string {
 	})
 }
 
-export function LogsTab({ logs, onClear }: LogsTabProps) {
+export const LogsTab = ({ logs, onClear }: LogsTabProps) => {
 	const [search, setSearch] = useState('')
 
 	const scrollRef = useRef<HTMLDivElement>(null)

@@ -45,11 +45,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@rozenite/plugin-bridge": "^1.4.0",
-    "arktype": "^2.2.0"
+    "@rozenite/plugin-bridge": "^1.0.0",
+    "@tanstack/react-query": "^5.0.0",
+    "arktype": "^2.0.0",
+    "react-error-boundary": "^6.0.0",
+    "react-select": "^5.0.0"
   },
   "devDependencies": {
-    "@rozenite/vite-plugin": "^1.4.0",
+    "@rozenite/vite-plugin": "^1.6.0",
     "@types/react": "^19.2.14",
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",
@@ -57,7 +60,7 @@
     "react-dom": "^19.2.4",
     "react-native": "^0.84.1",
     "react-native-web": "^0.21.2",
-    "rozenite": "^1.4.0",
+    "rozenite": "^1.6.0",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.9.3",
     "vite": "^7.3.1"

@@ -10,13 +10,13 @@ type ExperimentRowProps = {
 	onRemoveOverride: (experimentKey: string) => void
 }
 
-export function ExperimentRow({
+export const ExperimentRow = ({
 	experiment,
 	isOverridden,
 	forcedVariation,
 	onSetOverride,
 	onRemoveOverride,
-}: ExperimentRowProps) {
+}: ExperimentRowProps) => {
 	const activeVariation = isOverridden ? (forcedVariation ?? experiment.variationId) : experiment.variationId
 
 	return (

@@ -12,13 +12,13 @@ type FeatureRowProps = {
 	onRemoveOverride: (key: string) => void
 }
 
-export function FeatureRow({
+export const FeatureRow = ({
 	feature,
 	isOverridden,
 	overriddenValue,
 	onSetOverride,
 	onRemoveOverride,
-}: FeatureRowProps) {
+}: FeatureRowProps) => {
 	const [editing, setEditing] = useState(false)
 	const [editValue, setEditValue] = useState('')
 

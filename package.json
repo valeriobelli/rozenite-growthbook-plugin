@@ -22,9 +22,9 @@
     "@commitlint/types": "^20.5.0",
     "knip": "^6.0.1",
     "lefthook": "^2.1.4",
-    "oxfmt": "^0.41.0",
-    "oxlint": "^1.55.0",
-    "oxlint-tsgolint": "^0.17.1"
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "oxlint-tsgolint": "^0.18.1"
   },
   "packageManager": "pnpm@10.32.1"
 }

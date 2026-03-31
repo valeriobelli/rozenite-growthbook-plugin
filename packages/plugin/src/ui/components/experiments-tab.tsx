@@ -12,13 +12,13 @@ type ExperimentsTabProps = {
 	onClearAll: () => void
 }
 
-export function ExperimentsTab({
+export const ExperimentsTab = ({
 	experiments,
 	forcedVariations,
 	onSetOverride,
 	onRemoveOverride,
 	onClearAll,
-}: ExperimentsTabProps) {
+}: ExperimentsTabProps) => {
 	const [search, setSearch] = useState('')
 
 	const filteredExperiments = useMemo(() => {

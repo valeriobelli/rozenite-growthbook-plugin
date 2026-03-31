@@ -1,35 +1,32 @@
+import type { RozeniteDevToolsClient } from '@rozenite/plugin-bridge'
 import { useRozeniteDevToolsClient } from '@rozenite/plugin-bridge'
-import { useState, useEffect, useCallback } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Suspense, useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { PLUGIN_ID } from '../shared/constants'
 import type { GrowthBookEventMap } from '../shared/event-map'
-import type { GrowthBookSnapshot, DebugLogEntry } from '../shared/types'
+import type { DebugLogEntry, GrowthBookSnapshot } from '../shared/types'
 
 import { AttributesTab } from './components/attributes-tab'
+import { DataProvider } from './components/data-provider'
+import { ErrorFallback } from './components/error'
 import { ExperimentsTab } from './components/experiments-tab'
 import { FeaturesTab } from './components/features-tab'
+import { Loader } from './components/loader'
 import { LogsTab } from './components/logs-tab'
 import { SdkInfoTab } from './components/sdk-info-tab'
-import './globals.css'
 import { TabBar, type TabId } from './components/tab-bar'
+import './globals.css'
 
-export default function GrowthBookPanel() {
-	const client = useRozeniteDevToolsClient<GrowthBookEventMap>({
-		pluginId: PLUGIN_ID,
-	})
+const queryClient = new QueryClient()
 
+const Panel = ({ client }: { client: RozeniteDevToolsClient<GrowthBookEventMap> }) => {
 	const [snapshot, setSnapshot] = useState<GrowthBookSnapshot | null>(null)
 	const [activeTab, setActiveTab] = useState<TabId>('features')
 	const [debugLogs, setDebugLogs] = useState<DebugLogEntry[]>([])
 
-	// Set up listeners first, then request snapshot with retry.
-	// The device may not be ready yet when the panel first connects, so
-	// retry until we get a response.
 	useEffect(() => {
-		if (!client) {
-			return
-		}
-
 		let received = false
 
 		const subscriptions = [
@@ -43,112 +40,117 @@ export default function GrowthBookPanel() {
 				setSnapshot(data)
 			}),
 			client.onMessage('gb:debug-log', (entry) => {
-				setDebugLogs((prev) => [...prev, entry])
+				setDebugLogs((prev) => prev.concat(entry))
 			}),
 			client.onMessage('gb:debug-logs-batch', (entries) => {
-				setDebugLogs((prev) => [...prev, ...entries])
+				setDebugLogs((prev) => prev.concat(entries))
 			}),
 		]
 
-		client.send('gb:request-snapshot', undefined)
-
+		// We request the snapshot every 500ms until we receive it,
+		// to handle the case where the panel is opened before the connection is fully established
 		const retryTimer = setInterval(() => {
 			if (received) {
+				clearInterval(retryTimer)
+
 				return
 			}
 
-			client.send('gb:request-snapshot', undefined)
+			client.send('gb:request-snapshot', {})
 		}, 500)
 
 		return () => {
 			clearInterval(retryTimer)
 
-			for (const sub of subscriptions) {
-				sub.remove()
-			}
+			subscriptions.forEach((subscription) => {
+				subscription.remove()
+			})
 		}
 	}, [client])
 
-	const sendEvent = useCallback(
-		<K extends keyof GrowthBookEventMap>(type: K, payload: GrowthBookEventMap[K]) => {
-			client?.send(type, payload)
-		},
-		[client]
-	)
-
-	const clearLogs = useCallback(() => {
-		setDebugLogs([])
-	}, [])
-
-	if (!client) {
-		return (
-			<div className="flex h-screen items-center justify-center text-panel-text-secondary">Connecting to device...</div>
-		)
-	}
-
 	if (!snapshot) {
-		return (
-			<div className="flex h-screen items-center justify-center text-panel-text-secondary">
-				Waiting for GrowthBook data...
-			</div>
-		)
+		return <Loader>Waiting for app sending GrowthBook data...</Loader>
 	}
 
 	return (
-		<div className="flex h-screen flex-col overflow-hidden">
-			<TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-			<div className="flex-1 overflow-auto p-3">
-				{activeTab === 'features' && (
-					<FeaturesTab
-						features={snapshot.features}
-						forcedFeatures={snapshot.forcedFeatures}
-						onSetOverride={(key, value) => {
-							sendEvent('gb:set-feature-override', { key, value })
-						}}
-						onRemoveOverride={(key) => {
-							sendEvent('gb:remove-feature-override', { key })
-						}}
-						onClearAll={() => {
-							sendEvent('gb:clear-feature-overrides', undefined)
-						}}
-					/>
-				)}
-				{activeTab === 'experiments' && (
-					<ExperimentsTab
-						experiments={snapshot.experiments}
-						forcedVariations={snapshot.forcedVariations}
-						onSetOverride={(experimentKey, variationIndex) => {
-							sendEvent('gb:set-variation-override', {
-								experimentKey,
-								variationIndex,
-							})
-						}}
-						onRemoveOverride={(experimentKey) => {
-							sendEvent('gb:remove-variation-override', { experimentKey })
-						}}
-						onClearAll={() => {
-							sendEvent('gb:clear-variation-overrides', undefined)
-						}}
-					/>
-				)}
-				{activeTab === 'attributes' && (
-					<AttributesTab
-						attributes={snapshot.attributes}
-						onSave={(attributes) => {
-							sendEvent('gb:set-attributes', { attributes })
-						}}
-					/>
-				)}
-				{activeTab === 'logs' && <LogsTab logs={debugLogs} onClear={clearLogs} />}
-				{activeTab === 'sdk-info' && (
-					<SdkInfoTab
-						sdkInfo={snapshot.sdkInfo}
-						onToggleDebug={(enabled) => {
-							sendEvent('gb:set-debug', { enabled })
-						}}
-					/>
-				)}
+		<DataProvider apiHost={snapshot.sdkInfo.apiHost}>
+			<div className="flex h-screen flex-col overflow-hidden">
+				<TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+				<div className="flex-1 overflow-auto p-3">
+					{activeTab === 'features' && (
+						<FeaturesTab
+							features={snapshot.features}
+							forcedFeatures={snapshot.forcedFeatures}
+							onSetOverride={(key, value) => {
+								client.send('gb:set-feature-override', { key, value })
+							}}
+							onRemoveOverride={(key) => {
+								client.send('gb:remove-feature-override', { key })
+							}}
+							onClearAll={() => {
+								client.send('gb:clear-feature-overrides', {})
+							}}
+						/>
+					)}
+					{activeTab === 'experiments' && (
+						<ExperimentsTab
+							experiments={snapshot.experiments}
+							forcedVariations={snapshot.forcedVariations}
+							onSetOverride={(experimentKey, variationIndex) => {
+								client.send('gb:set-variation-override', {
+									experimentKey,
+									variationIndex,
+								})
+							}}
+							onRemoveOverride={(experimentKey) => {
+								client.send('gb:remove-variation-override', { experimentKey })
+							}}
+							onClearAll={() => {
+								client.send('gb:clear-variation-overrides', {})
+							}}
+						/>
+					)}
+					{activeTab === 'attributes' && (
+						<AttributesTab
+							attributes={snapshot.attributes}
+							onSave={(attributes) => {
+								client.send('gb:set-attributes', { attributes })
+							}}
+						/>
+					)}
+					{activeTab === 'logs' && (
+						<LogsTab
+							logs={debugLogs}
+							onClear={() => {
+								setDebugLogs([])
+							}}
+						/>
+					)}
+					{activeTab === 'sdk-info' && <SdkInfoTab sdkInfo={snapshot.sdkInfo} />}
+				</div>
 			</div>
-		</div>
+		</DataProvider>
 	)
 }
+
+const GrowthBookPanel = () => {
+	const client = useRozeniteDevToolsClient<GrowthBookEventMap>({
+		pluginId: PLUGIN_ID,
+	})
+
+	if (!client) {
+		return <Loader>Connecting to device...</Loader>
+	}
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			<ErrorBoundary FallbackComponent={ErrorFallback}>
+				<Suspense fallback={<Loader>Fetching GrowthBook data...</Loader>}>
+					<Panel client={client} />
+				</Suspense>
+			</ErrorBoundary>
+		</QueryClientProvider>
+	)
+}
+
+export default GrowthBookPanel

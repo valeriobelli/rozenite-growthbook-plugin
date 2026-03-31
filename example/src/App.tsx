@@ -1,10 +1,4 @@
-import {
-	GrowthBook,
-	GrowthBookProvider,
-	useFeatureIsOn,
-	useFeatureValue,
-	useGrowthBook,
-} from '@growthbook/growthbook-react'
+import { GrowthBook, GrowthBookProvider, useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react'
 import { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
@@ -62,12 +56,7 @@ const gb = new GrowthBook({
 })
 
 function DevToolsBridge() {
-	const growthbook = useGrowthBook()
-
-	// GrowthBook's hook returns a wider type than our plugin expects;
-	// the structural overlap is sufficient at runtime.
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
-	useGrowthBookDevTools({ gb: growthbook as never })
+	useGrowthBookDevTools({ gb })
 
 	return null
 }

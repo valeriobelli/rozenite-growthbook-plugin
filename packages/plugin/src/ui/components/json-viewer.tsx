@@ -6,7 +6,7 @@ type JsonViewerProps = {
 	maxDepth?: number
 }
 
-function getValueColor(value: unknown): string {
+const getValueColor = (value: unknown) => {
 	if (value === null || value === undefined) {
 		return 'text-value-null'
 	}
@@ -26,7 +26,7 @@ function getValueColor(value: unknown): string {
 	return 'text-value-object'
 }
 
-function formatValue(value: unknown): string {
+const formatValue = (value: unknown) => {
 	if (value === null) {
 		return 'null'
 	}
@@ -42,7 +42,7 @@ function formatValue(value: unknown): string {
 	return JSON.stringify(value)
 }
 
-export function JsonViewer({ data, depth = 0, maxDepth = 5 }: JsonViewerProps) {
+export const JsonViewer = ({ data, depth = 0, maxDepth = 5 }: JsonViewerProps) => {
 	const [expanded, setExpanded] = useState(depth < 2)
 
 	if (data === null || data === undefined || typeof data !== 'object') {
@@ -105,7 +105,7 @@ export function JsonViewer({ data, depth = 0, maxDepth = 5 }: JsonViewerProps) {
 	)
 }
 
-export function InlineValue({ value }: { value: unknown }) {
+export const InlineValue = ({ value }: { value: unknown }) => {
 	if (typeof value === 'object' && value !== null) {
 		const str = JSON.stringify(value)
 

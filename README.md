@@ -2,7 +2,7 @@
 
 A [Rozenite](https://rozenite.com) DevTools plugin for debugging [GrowthBook](https://www.growthbook.io) feature flags and experiments in React Native apps.
 
-Inspect features, override values, force experiment variations, and edit user attributes — all from the Rozenite DevTools panel.
+Inspect features, override values, force experiment variations, and edit user attributes; all from the Rozenite DevTools panel.
 
 ## Installation
 
@@ -43,27 +43,7 @@ cd rozenite-growthbook-plugin
 pnpm install
 ```
 
-Useful commands:
-
-```bash
-pnpm dev             # Watch mode
-pnpm build           # Build the plugin
-pnpm typecheck       # Run TypeScript checks
-pnpm lint            # Lint with oxlint
-pnpm format          # Format with oxfmt
-pnpm format:check    # Check formatting
-pnpm knip            # Find unused exports/deps
-```
-
-To run the example app:
-
-```bash
-pnpm start:example          # Start Expo
-pnpm ios:example            # Run on iOS
-pnpm android:example        # Run on Android
-```
-
-The example app needs `WITH_ROZENITE=true` set before the Expo command (e.g. `WITH_ROZENITE=true expo start`).
+Look into the `package.json` files to understand the packages interface.
 
 ## Contributing
 

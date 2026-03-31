@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import type { FeatureSnapshot } from '../../shared/types'
 
@@ -12,13 +12,13 @@ type FeaturesTabProps = {
 	onClearAll: () => void
 }
 
-export function FeaturesTab({
+export const FeaturesTab = ({
 	features,
 	forcedFeatures,
 	onSetOverride,
 	onRemoveOverride,
 	onClearAll,
-}: FeaturesTabProps) {
+}: FeaturesTabProps) => {
 	const [search, setSearch] = useState('')
 
 	const filteredFeatures = useMemo(() => {
