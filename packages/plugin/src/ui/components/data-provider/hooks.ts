@@ -49,7 +49,7 @@ export const useGrowthBookApi = ({ apiHost, apiKey }: { apiHost: string; apiKey:
 	})
 
 	return {
-		archetypes: archetypesQuery.data ?? [],
-		attributeSchema: attributeSchemaQuery.data ?? [],
+		archetypes: archetypesQuery.data,
+		attributeSchema: attributeSchemaQuery.data,
 	}
 }
