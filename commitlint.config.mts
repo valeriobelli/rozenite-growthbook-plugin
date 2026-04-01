@@ -7,7 +7,7 @@ const config: UserConfig = {
 		'footer-max-line-length': [0],
 		'header-max-length': [2, 'always', 100],
 		'scope-empty': [2, 'always'],
-		'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'refactor', 'perf', 'test', 'ci', 'build', 'revert', 'chore']],
+		'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'refactor', 'deps', 'test', 'ci', 'build', 'revert']],
 	},
 }
 
