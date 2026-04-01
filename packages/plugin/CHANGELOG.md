@@ -1,5 +1,11 @@
 # rozenite-growthbook-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- 3e773b5: Force changeset to create github releases
+
 ## 0.2.0
 
 ### Minor Changes
