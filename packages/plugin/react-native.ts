@@ -9,6 +9,7 @@ const isReactNative = typeof navigator !== 'undefined' && navigator.product === 
 let useGrowthBookDevTools: UseGrowthBookDevTools
 
 if (isDev && isReactNative && !isServer) {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	const mod = require('./src/react-native/use-growthbook-devtools') as { useGrowthBookDevTools: UseGrowthBookDevTools }
 
 	useGrowthBookDevTools = mod.useGrowthBookDevTools
