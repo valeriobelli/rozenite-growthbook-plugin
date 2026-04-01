@@ -1,5 +1,11 @@
 # rozenite-growthbook-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- c4a09da: Add possibility to override GrowthBook backend API endpoint
+
 ## 0.2.1
 
 ### Patch Changes
