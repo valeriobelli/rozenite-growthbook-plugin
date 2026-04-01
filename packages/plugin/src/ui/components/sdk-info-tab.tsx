@@ -2,7 +2,8 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 
 import type { SdkInfoSnapshot } from '../../shared/types'
-import { useApiKey, useClearApiKey, useSetApiKey } from '../atoms'
+import { useApiKey, useClearApiKey, useIsCloud, useSetApiKey, useSetIsCloud } from '../atoms'
+import { CLOUD_API_HOST } from '../constants'
 
 const maskKey = (key: string) =>
 	key.length <= 8 ? key : `${key.slice(0, 4)}${'*'.repeat(key.length - 8)}${key.slice(-4)}`
@@ -37,6 +38,37 @@ const InfoCard = {
 	Content: InfoCardContent,
 	Label: InfoCardLabel,
 	Root: InfoCardRoot,
+}
+
+interface IsCloudCardProps {
+	sdkApiHost: string
+}
+
+const IsCloudCard = ({ sdkApiHost }: IsCloudCardProps) => {
+	const isCloud = useIsCloud()
+	const setIsCloud = useSetIsCloud()
+
+	return (
+		<InfoCard.Root>
+			<InfoCard.Label>Backend</InfoCard.Label>
+			<InfoCard.Content>
+				<label className="flex cursor-pointer items-center gap-2">
+					<input
+						checked={isCloud}
+						className="accent-panel-accent"
+						type="checkbox"
+						onChange={(e) => {
+							setIsCloud(e.target.checked)
+						}}
+					/>
+					<span>GrowthBook Cloud</span>
+				</label>
+				<p className="mt-2 text-xs text-panel-text-secondary">
+					{isCloud ? `API calls use ${CLOUD_API_HOST}` : `API calls use SDK host: ${sdkApiHost || 'Not configured'}`}
+				</p>
+			</InfoCard.Content>
+		</InfoCard.Root>
+	)
 }
 
 const ApiKeyCard = () => {
@@ -156,6 +188,10 @@ export const SdkInfoTab = ({ sdkInfo }: SdkInfoTabProps) => (
 					<span className="text-panel-text-secondary">{formatTimestamp(sdkInfo.timestamp)}</span>
 				</InfoCard.Content>
 			</InfoCard.Root>
+		</div>
+
+		<div className="col-span-2">
+			<IsCloudCard sdkApiHost={sdkInfo.apiHost} />
 		</div>
 
 		<div className="col-span-2">

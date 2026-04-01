@@ -2,7 +2,8 @@ import type { PropsWithChildren, ReactNode } from 'react'
 import { createContext, useContext, useMemo } from 'react'
 
 import { invariant } from '../../../shared/utils'
-import { useApiKey } from '../../atoms'
+import { useApiKey, useIsCloud } from '../../atoms'
+import { CLOUD_API_HOST } from '../../constants'
 
 import type { Archetype, SDKAttribute } from './codecs'
 import { useGrowthBookApi } from './hooks'
@@ -47,13 +48,16 @@ type Props = {
 
 export const DataProvider = ({ apiHost, children }: Props) => {
 	const apiKey = useApiKey()
+	const isCloud = useIsCloud()
 
-	if (!apiHost || !apiKey) {
+	const effectiveApiHost = isCloud ? CLOUD_API_HOST : apiHost
+
+	if (!effectiveApiHost || !apiKey) {
 		return <DefaultDataProvider>{children}</DefaultDataProvider>
 	}
 
 	return (
-		<ApiDataProvider apiHost={apiHost} apiKey={apiKey}>
+		<ApiDataProvider apiHost={effectiveApiHost} apiKey={apiKey}>
 			{children}
 		</ApiDataProvider>
 	)
