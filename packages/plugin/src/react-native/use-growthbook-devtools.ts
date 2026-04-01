@@ -81,7 +81,7 @@ const buildFeatureSnapshots = (gb: GrowthBookInstance): FeatureSnapshot[] =>
 	})
 
 const buildExperimentSnapshots = (gb: GrowthBookInstance): ExperimentSnapshot[] =>
-	[...gb.getAllResults().entries()].flatMap(([, { experiment, result }]) => ({
+	[...gb.getAllResults().entries()].map(([, { experiment, result }]) => ({
 		hashAttribute: result.hashAttribute,
 		hashValue: result.hashValue,
 		inExperiment: result.inExperiment,
@@ -127,15 +127,20 @@ const buildSnapshot = (
 	gb: GrowthBookInstance,
 	debugLogs: DebugLogEntry[],
 	prebuiltFeatures?: FeatureSnapshot[]
-): GrowthBookSnapshot => ({
-	attributes: gb.getAttributes(),
-	debugLogs,
-	experiments: buildExperimentSnapshots(gb),
-	features: prebuiltFeatures ?? buildFeatureSnapshots(gb),
-	forcedFeatures: serializeForcedFeatures(gb.getForcedFeatures()),
-	forcedVariations: gb.getForcedVariations(),
-	sdkInfo: buildSdkInfo(gb),
-})
+): GrowthBookSnapshot => {
+	const features = prebuiltFeatures ?? buildFeatureSnapshots(gb)
+	const experiments = buildExperimentSnapshots(gb)
+
+	return {
+		attributes: gb.getAttributes(),
+		debugLogs,
+		experiments,
+		features,
+		forcedFeatures: serializeForcedFeatures(gb.getForcedFeatures()),
+		forcedVariations: gb.getForcedVariations(),
+		sdkInfo: buildSdkInfo(gb),
+	}
+}
 
 export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 	const client = useRozeniteDevToolsClient<GrowthBookEventMap>({ pluginId: PLUGIN_ID })
