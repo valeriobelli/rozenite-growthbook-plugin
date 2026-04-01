@@ -1,8 +1,11 @@
 import { GrowthBook, GrowthBookProvider, useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react'
 import { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { install } from 'react-native-quick-crypto'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { useGrowthBookDevTools } from 'rozenite-growthbook-plugin'
+
+install()
 
 const gb = new GrowthBook({
 	attributes: {
