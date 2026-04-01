@@ -2,59 +2,39 @@ import type { PropsWithChildren, ReactNode } from 'react'
 import { createContext, useContext, useMemo } from 'react'
 
 import { invariant } from '../../../shared/utils'
+import { useApiKey } from '../../atoms'
 
 import type { Archetype, SDKAttribute } from './codecs'
-import { useApiKey, useGrowthBookApi } from './hooks'
+import { useGrowthBookApi } from './hooks'
 
 type DataProviderContextType = {
-	apiKey: string | null
-	saveApiKey: (key: string) => void
-	clearApiKey: () => void
 	archetypes: Archetype[]
 	attributeSchema: SDKAttribute[]
 }
 
 const Context = createContext<DataProviderContextType | null>(null)
 
-const DefaultDataProvider = ({
-	saveApiKey,
-	clearApiKey,
-	children,
-}: PropsWithChildren<Pick<DataProviderContextType, 'saveApiKey' | 'clearApiKey'>>) => {
+const DefaultDataProvider = ({ children }: PropsWithChildren) => {
 	const value = useMemo(
 		() => ({
-			apiKey: null,
 			archetypes: [],
 			attributeSchema: [],
-			clearApiKey,
-			saveApiKey,
 		}),
-		[saveApiKey, clearApiKey]
+		[]
 	)
 
 	return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
-const ApiDataProvider = ({
-	apiKey,
-	apiHost,
-	clearApiKey,
-	saveApiKey,
-	children,
-}: PropsWithChildren<
-	{ apiHost: string; apiKey: string } & Required<Pick<DataProviderContextType, 'saveApiKey' | 'clearApiKey'>>
->) => {
+const ApiDataProvider = ({ apiKey, apiHost, children }: PropsWithChildren<{ apiHost: string; apiKey: string }>) => {
 	const { archetypes, attributeSchema } = useGrowthBookApi({ apiHost, apiKey })
 
 	const value = useMemo(
 		() => ({
-			apiKey,
 			archetypes,
 			attributeSchema,
-			clearApiKey,
-			saveApiKey,
 		}),
-		[apiKey, archetypes, attributeSchema, saveApiKey, clearApiKey]
+		[archetypes, attributeSchema]
 	)
 
 	return <Context.Provider value={value}>{children}</Context.Provider>
@@ -66,14 +46,14 @@ type Props = {
 }
 
 export const DataProvider = ({ apiHost, children }: Props) => {
-	const { apiKey, ...apiKeyHandlers } = useApiKey()
+	const apiKey = useApiKey()
 
 	if (!apiHost || !apiKey) {
-		return <DefaultDataProvider {...apiKeyHandlers}>{children}</DefaultDataProvider>
+		return <DefaultDataProvider>{children}</DefaultDataProvider>
 	}
 
 	return (
-		<ApiDataProvider apiHost={apiHost} apiKey={apiKey} {...apiKeyHandlers}>
+		<ApiDataProvider apiHost={apiHost} apiKey={apiKey}>
 			{children}
 		</ApiDataProvider>
 	)

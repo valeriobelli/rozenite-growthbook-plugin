@@ -1,5 +1,6 @@
 import { type } from 'arktype'
-import { useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { BooleanInput } from './attribute-inputs/boolean-input'
 import { EnumInput } from './attribute-inputs/enum-input'
@@ -7,8 +8,10 @@ import { NumberArrayInput } from './attribute-inputs/number-array-input'
 import { NumberInput } from './attribute-inputs/number-input'
 import { StringArrayInput } from './attribute-inputs/string-array-input'
 import { TextInput } from './attribute-inputs/text-input'
-import { useData } from './data-provider'
+import { DataProvider, useData } from './data-provider'
 import type { SDKAttribute } from './data-provider/codecs'
+import { ErrorFallback } from './error'
+import { Loader } from './loader'
 
 const attributesSchema = type('Record<string, unknown>')
 const booleanSchema = type('boolean')
@@ -29,6 +32,7 @@ const KNOWN_TYPES: ReadonlyArray<SDKAttribute['datatype']> = [
 ]
 
 type AttributesTabProps = {
+	apiHost: string
 	attributes: Record<string, unknown>
 	onSave: (attributes: Record<string, unknown>) => void
 }
@@ -110,7 +114,7 @@ const AttributeInput = ({
 	return <TextInput key={`${attrKey}-${strValue}`} initialValue={strValue} onBlurSave={onChange} />
 }
 
-export const AttributesTab = ({ attributes, onSave }: AttributesTabProps) => {
+const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 	const originalAttributesRef = useRef(attributes)
 
 	const [customAttributeKeys, setCustomAttributeKeys] = useState<Set<string>>(new Set())
@@ -481,3 +485,13 @@ export const AttributesTab = ({ attributes, onSave }: AttributesTabProps) => {
 		</div>
 	)
 }
+
+export const AttributesTab = (props: AttributesTabProps) => (
+	<ErrorBoundary FallbackComponent={ErrorFallback}>
+		<Suspense fallback={<Loader>Fetching GrowthBook data...</Loader>}>
+			<DataProvider apiHost={props.apiHost}>
+				<AttributesTabInner {...props} />
+			</DataProvider>
+		</Suspense>
+	</ErrorBoundary>
+)

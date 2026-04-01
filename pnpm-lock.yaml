@@ -75,12 +75,21 @@ importers:
       '@rozenite/plugin-bridge':
         specifier: ^1.0.0
         version: 1.6.0(react@19.2.4)
+      '@tanstack/query-async-storage-persister':
+        specifier: ^5.0.0
+        version: 5.96.1
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.95.2(react@19.2.4)
+        version: 5.96.1(react@19.2.4)
+      '@tanstack/react-query-persist-client':
+        specifier: ^5.0.0
+        version: 5.96.1(@tanstack/react-query@5.96.1(react@19.2.4))(react@19.2.4)
       arktype:
         specifier: ^2.0.0
         version: 2.2.0
+      jotai:
+        specifier: ^2.0.0
+        version: 2.19.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
       react-error-boundary:
         specifier: ^6.0.0
         version: 6.1.1(react@19.2.4)
@@ -2128,11 +2137,23 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
-  '@tanstack/query-core@5.95.2':
-    resolution: {integrity: sha512-o4T8vZHZET4Bib3jZ/tCW9/7080urD4c+0/AUaYVpIqOsr7y0reBc1oX3ttNaSW5mYyvZHctiQ/UOP2PfdmFEQ==}
+  '@tanstack/query-async-storage-persister@5.96.1':
+    resolution: {integrity: sha512-5+Log708EqBHe6bPIZvNkJvbLQ4vK7AOCOT303lWytst48ylqlkDpzMWYeR+zZLaKCsyt7X6qx5VhMWH6IOy9w==}
 
-  '@tanstack/react-query@5.95.2':
-    resolution: {integrity: sha512-/wGkvLj/st5Ud1Q76KF1uFxScV7WeqN1slQx5280ycwAyYkIPGaRZAEgHxe3bjirSd5Zpwkj6zNcR4cqYni/ZA==}
+  '@tanstack/query-core@5.96.1':
+    resolution: {integrity: sha512-u1yBgtavSy+N8wgtW3PiER6UpxcplMje65yXnnVgiHTqiMwLlxiw4WvQDrXyn+UD6lnn8kHaxmerJUzQcV/MMg==}
+
+  '@tanstack/query-persist-client-core@5.96.1':
+    resolution: {integrity: sha512-61jJdGjhBaAJiQ6TRt4uFI8EoAPyf7bJjbtc59AxZwMyid9kV9FlUEtNs2TkEzYHPTYvDZzz0qOvvkn1YD/VEg==}
+
+  '@tanstack/react-query-persist-client@5.96.1':
+    resolution: {integrity: sha512-HkYAI7T2uc12gvVR8P1D7dHgA/AdGDhqDN1HeaNP561OFa0H425qk61ykWtpF8Vnv82ElX6ao0nuNr1oPh89Uw==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.96.1
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.96.1':
+    resolution: {integrity: sha512-2X7KYK5KKWUKGeWCVcqxXAkYefJtrKB7tSKWgeG++b0H6BRHxQaLSSi8AxcgjmUnnosHuh9WsFZqvE16P1WCzA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3390,6 +3411,24 @@ packages:
 
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
+
+  jotai@2.19.0:
+    resolution: {integrity: sha512-r2wwxEXP1F2JteDLZEOPoIpAHhV89paKsN5GWVYndPNMMP/uVZDcC+fNj0A8NjKgaPWzdyO8Vp8YcYKe0uCEqQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -7183,11 +7222,26 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@tanstack/query-core@5.95.2': {}
-
-  '@tanstack/react-query@5.95.2(react@19.2.4)':
+  '@tanstack/query-async-storage-persister@5.96.1':
     dependencies:
-      '@tanstack/query-core': 5.95.2
+      '@tanstack/query-core': 5.96.1
+      '@tanstack/query-persist-client-core': 5.96.1
+
+  '@tanstack/query-core@5.96.1': {}
+
+  '@tanstack/query-persist-client-core@5.96.1':
+    dependencies:
+      '@tanstack/query-core': 5.96.1
+
+  '@tanstack/react-query-persist-client@5.96.1(@tanstack/react-query@5.96.1(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.96.1
+      '@tanstack/react-query': 5.96.1(react@19.2.4)
+      react: 19.2.4
+
+  '@tanstack/react-query@5.96.1(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-core': 5.96.1
       react: 19.2.4
 
   '@tybys/wasm-util@0.10.1':
@@ -8588,6 +8642,13 @@ snapshots:
   jiti@2.6.1: {}
 
   jju@1.4.0: {}
+
+  jotai@2.19.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4):
+    optionalDependencies:
+      '@babel/core': 7.29.0
+      '@babel/template': 7.28.6
+      '@types/react': 19.2.14
+      react: 19.2.4
 
   js-tokens@4.0.0: {}
 

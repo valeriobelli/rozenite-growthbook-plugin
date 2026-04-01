@@ -1,12 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { type } from 'arktype'
-import { useState } from 'react'
 
 import { invariant } from '../../../shared/utils'
 
 import { ArchetypesResponse, AttributeSchemaResponse } from './codecs'
-
-const STORAGE_KEY = 'rozenite-gb-api-key'
 
 const fetchArchetypes = async (apiHost: string, apiKey: string) => {
 	const response = await fetch(`${apiHost}/api/v1/archetypes`, {
@@ -54,27 +51,5 @@ export const useGrowthBookApi = ({ apiHost, apiKey }: { apiHost: string; apiKey:
 	return {
 		archetypes: archetypesQuery.data ?? [],
 		attributeSchema: attributeSchemaQuery.data ?? [],
-	}
-}
-
-export const useApiKey = () => {
-	const [apiKey, setApiKey] = useState<string | null>(() => localStorage.getItem(STORAGE_KEY))
-
-	const saveApiKey = (key: string) => {
-		localStorage.setItem(STORAGE_KEY, key)
-
-		setApiKey(key)
-	}
-
-	const clearApiKey = () => {
-		localStorage.removeItem(STORAGE_KEY)
-
-		setApiKey(null)
-	}
-
-	return {
-		apiKey,
-		clearApiKey,
-		saveApiKey,
 	}
 }
