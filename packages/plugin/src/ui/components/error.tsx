@@ -39,7 +39,12 @@ const getTechnicalErrorDetails = (error: unknown) => {
 	}
 }
 
-export const ErrorFallback = ({ error }: { error: unknown }) => {
+interface ErrorFallbackProps {
+	error: unknown
+	onReset?: () => void
+}
+
+export const ErrorFallback = ({ error, onReset }: ErrorFallbackProps) => {
 	const { resetBoundary } = useErrorBoundary()
 	const technicalError = getTechnicalErrorDetails(error)
 
@@ -59,7 +64,12 @@ export const ErrorFallback = ({ error }: { error: unknown }) => {
 				</pre>
 			</details>
 
-			<button className="rounded bg-red-500 px-4 py-2 text-white" onClick={resetBoundary}>
+			<button
+				className="rounded bg-red-500 px-4 py-2 text-white"
+				onClick={() => {
+					onReset?.()
+					resetBoundary()
+				}}>
 				Reload
 			</button>
 		</div>

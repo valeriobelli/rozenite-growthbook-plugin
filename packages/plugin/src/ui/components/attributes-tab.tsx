@@ -1,5 +1,7 @@
+import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import { type } from 'arktype'
 import { Suspense, useRef, useState } from 'react'
+import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { BooleanInput } from './attribute-inputs/boolean-input'
@@ -10,7 +12,7 @@ import { StringArrayInput } from './attribute-inputs/string-array-input'
 import { TextInput } from './attribute-inputs/text-input'
 import { DataProvider, useData } from './data-provider'
 import type { SDKAttribute } from './data-provider/codecs'
-import { ErrorFallback } from './error'
+import { ErrorFallback as BaseErrorFallback } from './error'
 import { Loader } from './loader'
 
 const attributesSchema = type('Record<string, unknown>')
@@ -52,6 +54,12 @@ const defaultValueForType = (datatype: SDKAttribute['datatype']) => {
 		case 'number[]':
 			return []
 	}
+}
+
+const ErrorFallback = (props: FallbackProps) => {
+	const { reset } = useQueryErrorResetBoundary()
+
+	return <BaseErrorFallback {...props} onReset={reset} />
 }
 
 const AttributeInput = ({
