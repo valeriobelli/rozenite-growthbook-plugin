@@ -57,6 +57,7 @@ export interface GrowthBookInstance {
 	getApiInfo?(): [string, string]
 	isRemoteEval?(): boolean
 	setRenderer(renderer: (() => void) | null): void
+	subscribe?: (callback: (experiment?: unknown, result?: unknown) => void) => () => void
 }
 
 export type GrowthBookDevToolsOptions = {
@@ -152,8 +153,17 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 			return
 		}
 
-		// Throttled devtools update — does NOT block the original renderer
+		let isSyncing = false
+
 		const handleStateChange = () => {
+			// Guard against re-entrance: buildFeatureSnapshots calls evalFeature which
+			// fires the gb.subscribe callback synchronously, which would call us again
+			if (isSyncing) {
+				return
+			}
+
+			isSyncing = true
+
 			const featureSnapshots = buildFeatureSnapshots(gb)
 
 			const newLogs = buildDebugLogsFromSnapshots(featureSnapshots, Date.now())
@@ -166,11 +176,34 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 
 			client.send('gb:state-update', snapshot)
 			client.send('gb:debug-logs-batch', newLogs)
+
+			isSyncing = false
 		}
 
 		gb.debug = true
 
+		// Patch public state-mutating methods so any SDK state change notifies devtools
+		// immediately, without depending on gb.subscribe (which only fires on experiment evaluation)
+		const originalSetAttributes = gb.setAttributes.bind(gb)
+		gb.setAttributes = async (attrs) => {
+			await originalSetAttributes(attrs)
+			handleStateChange()
+		}
+
+		const originalSetForcedFeatures = gb.setForcedFeatures.bind(gb)
+		gb.setForcedFeatures = (map) => {
+			originalSetForcedFeatures(map)
+			handleStateChange()
+		}
+
+		const originalSetForcedVariations = gb.setForcedVariations.bind(gb)
+		gb.setForcedVariations = async (vars) => {
+			await originalSetForcedVariations(vars)
+			handleStateChange()
+		}
+
 		const subscriptions = [
+			...(gb.subscribe ? [{ remove: gb.subscribe(handleStateChange) }] : []),
 			client.onMessage('gb:request-snapshot', () => {
 				client.send('gb:snapshot', buildSnapshot(gb, debugLogsRef.current))
 			}),
@@ -180,8 +213,6 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 				current.set(key, value)
 
 				gb.setForcedFeatures(current)
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:remove-feature-override', ({ key }) => {
 				const current = gb.getForcedFeatures()
@@ -189,8 +220,6 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 				current.delete(key)
 
 				gb.setForcedFeatures(current)
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:clear-feature-overrides', () => {
 				const current = gb.getForcedFeatures()
@@ -198,8 +227,6 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 				current.clear()
 
 				gb.setForcedFeatures(current)
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:set-variation-override', ({ experimentKey, variationIndex }) => {
 				const current = gb.getForcedVariations()
@@ -208,8 +235,6 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 					...current,
 					[experimentKey]: variationIndex,
 				})
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:remove-variation-override', ({ experimentKey }) => {
 				const current = gb.getForcedVariations()
@@ -217,22 +242,20 @@ export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
 				delete current[experimentKey]
 
 				void gb.setForcedVariations(current)
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:clear-variation-overrides', () => {
 				void gb.setForcedVariations({})
-
-				handleStateChange()
 			}),
 			client.onMessage('gb:set-attributes', ({ attributes }) => {
 				void gb.setAttributes(attributes)
-
-				handleStateChange()
 			}),
 		]
 
 		return () => {
+			gb.setAttributes = originalSetAttributes
+			gb.setForcedFeatures = originalSetForcedFeatures
+			gb.setForcedVariations = originalSetForcedVariations
+
 			subscriptions.forEach((subscription) => {
 				subscription.remove()
 			})
