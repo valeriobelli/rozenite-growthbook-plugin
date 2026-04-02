@@ -16,6 +16,7 @@ import { FeaturesTab } from './components/features-tab'
 import { Loader } from './components/loader'
 import { LogsTab } from './components/logs-tab'
 import { SdkInfoTab } from './components/sdk-info-tab'
+import { SettingsTab } from './components/settings-tab'
 import { TabBar, type TabId } from './components/tab-bar'
 import './globals.css'
 
@@ -150,6 +151,7 @@ const Panel = () => {
 					/>
 				)}
 				{activeTab === 'sdk-info' && <SdkInfoTab sdkInfo={snapshot.sdkInfo} />}
+				{activeTab === 'settings' && <SettingsTab sdkApiHost={snapshot.sdkInfo.apiHost} />}
 			</div>
 		</div>
 	)

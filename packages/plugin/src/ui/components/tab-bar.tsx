@@ -1,4 +1,4 @@
-export type TabId = 'features' | 'experiments' | 'attributes' | 'logs' | 'sdk-info'
+export type TabId = 'features' | 'experiments' | 'attributes' | 'logs' | 'sdk-info' | 'settings'
 
 type Tab = {
 	id: TabId
@@ -11,6 +11,7 @@ const TABS: Tab[] = [
 	{ id: 'attributes', label: 'Attributes' },
 	{ id: 'logs', label: 'Logs' },
 	{ id: 'sdk-info', label: 'SDK Info' },
+	{ id: 'settings', label: 'Settings' },
 ]
 
 type TabBarProps = {
