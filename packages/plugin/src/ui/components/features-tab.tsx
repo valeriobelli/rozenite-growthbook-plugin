@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 
 import type { FeatureSnapshot } from '../../shared/types'
 
@@ -20,16 +20,12 @@ export const FeaturesTab = ({
 	onClearAll,
 }: FeaturesTabProps) => {
 	const [search, setSearch] = useState('')
+	const deferredSearch = useDeferredValue(search)
 
-	const filteredFeatures = useMemo(() => {
-		if (!search) {
-			return features
-		}
-
-		const lower = search.toLowerCase()
-
-		return features.filter((f) => f.key.toLowerCase().includes(lower))
-	}, [features, search])
+	const filteredFeatures = useMemo(
+		() => features.filter((f) => f.key.toLowerCase().includes(deferredSearch.trim().toLowerCase())),
+		[features, deferredSearch]
+	)
 
 	const hasOverrides = Object.keys(forcedFeatures).length > 0
 

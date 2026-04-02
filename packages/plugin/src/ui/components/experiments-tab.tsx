@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useDeferredValue, useMemo, useState } from 'react'
 
 import type { ExperimentSnapshot } from '../../shared/types'
 
@@ -20,18 +20,15 @@ export const ExperimentsTab = ({
 	onClearAll,
 }: ExperimentsTabProps) => {
 	const [search, setSearch] = useState('')
+	const deferredSearch = useDeferredValue(search)
 
 	const filteredExperiments = useMemo(() => {
-		if (!search) {
-			return experiments
-		}
-
-		const lower = search.toLowerCase()
+		const lower = deferredSearch.trim().toLowerCase()
 
 		return experiments.filter(
 			(e) => e.key.toLowerCase().includes(lower) || (e.name?.toLowerCase().includes(lower) ?? false)
 		)
-	}, [experiments, search])
+	}, [experiments, deferredSearch])
 
 	const hasOverrides = Object.keys(forcedVariations).length > 0
 
