@@ -1,5 +1,12 @@
 # rozenite-growthbook-plugin
 
+## 0.5.0
+
+### Minor Changes
+
+- 95dcd5a: Separate SDK info and devtools-specific settings into separate tabs
+- bb0fd3a: Optimize perf withing results filtering
+
 ## 0.4.0
 
 ### Minor Changes
