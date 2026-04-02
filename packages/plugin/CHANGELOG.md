@@ -1,5 +1,12 @@
 # rozenite-growthbook-plugin
 
+## 0.4.0
+
+### Minor Changes
+
+- 5952347: Optimize UI/UX and performance
+- 4d30127: Subscribe to client changes reflecting them to devtools state
+
 ## 0.3.0
 
 ### Minor Changes
