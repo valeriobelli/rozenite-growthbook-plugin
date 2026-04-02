@@ -27,6 +27,7 @@ export const ExperimentRow = ({
 			</td>
 			<td className="px-3 py-2">
 				<select
+					aria-label={`Variation for ${experiment.key}`}
 					className="rounded border border-panel-border bg-panel-surface px-2 py-1 text-sm text-panel-text"
 					value={activeVariation}
 					onChange={(e) => {
@@ -50,7 +51,9 @@ export const ExperimentRow = ({
 			<td className="px-3 py-2 text-center">
 				<span
 					className={`inline-block rounded px-2 py-0.5 text-xs ${
-						experiment.inExperiment ? 'bg-green-500/10 text-green-400' : 'bg-panel-surface text-panel-text-secondary'
+						experiment.inExperiment
+							? 'bg-panel-success-bg text-panel-success'
+							: 'bg-panel-surface text-panel-text-secondary'
 					}`}>
 					{experiment.inExperiment ? 'In experiment' : 'Not in experiment'}
 				</span>

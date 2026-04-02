@@ -115,6 +115,7 @@ const ApiKeyCard = () => {
 					}}>
 					<input
 						type="password"
+						aria-label="Management API Key"
 						className="flex-1 rounded border border-panel-border bg-panel-bg px-2 py-1 font-mono text-xs text-panel-text placeholder:text-panel-text-secondary"
 						placeholder="secret_..."
 						value={inputValue}
@@ -139,7 +140,7 @@ interface SdkInfoTabProps {
 }
 
 export const SdkInfoTab = ({ sdkInfo }: SdkInfoTabProps) => (
-	<div className="grid grid-cols-2 gap-3">
+	<div className="grid grid-cols-1 gap-3 min-[320px]:grid-cols-2">
 		<InfoCard.Root>
 			<InfoCard.Label>API Host</InfoCard.Label>
 			<InfoCard.Content>
@@ -175,7 +176,7 @@ export const SdkInfoTab = ({ sdkInfo }: SdkInfoTabProps) => (
 		<InfoCard.Root>
 			<InfoCard.Label>Remote Evaluation</InfoCard.Label>
 			<InfoCard.Content>
-				<span className={sdkInfo.usingRemoteEval ? 'text-green-400' : 'text-panel-text-secondary'}>
+				<span className={sdkInfo.usingRemoteEval ? 'text-panel-success' : 'text-panel-text-secondary'}>
 					{sdkInfo.usingRemoteEval ? 'Enabled' : 'Disabled'}
 				</span>
 			</InfoCard.Content>

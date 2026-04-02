@@ -1,6 +1,6 @@
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import { type } from 'arktype'
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -136,12 +136,20 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 
 	const { archetypes, attributeSchema } = useData()
 
-	const schemaByProperty = new Map(attributeSchema.map((attr) => [attr.property, attr]))
+	const schemaByProperty = useMemo(
+		() => new Map(attributeSchema.map((attr) => [attr.property, attr])),
+		[attributeSchema]
+	)
 
-	const isOverridden = (key: string) =>
-		JSON.stringify(attributes[key]) !== JSON.stringify(originalAttributesRef.current[key])
+	const overriddenKeys = useMemo(() => {
+		const original = originalAttributesRef.current
 
-	const hasOverrides = Object.keys(attributes).some(isOverridden)
+		return new Set(
+			Object.keys(attributes).filter((key) => JSON.stringify(attributes[key]) !== JSON.stringify(original[key]))
+		)
+	}, [attributes])
+
+	const hasOverrides = overriddenKeys.size > 0
 
 	const handleFieldChange = (key: string, value: unknown) => {
 		onSave({ ...attributes, [key]: value })
@@ -322,9 +330,11 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 						spellCheck={false}
 					/>
 
-					{jsonError !== null && (
-						<div className="mt-1 rounded bg-red-500/10 px-3 py-2 text-xs text-red-400">{jsonError}</div>
-					)}
+					<div aria-live="polite" aria-atomic="true" className="mt-1 min-h-0">
+						{jsonError !== null && (
+							<div className="rounded bg-panel-error-bg px-3 py-2 text-xs text-panel-error">{jsonError}</div>
+						)}
+					</div>
 
 					<div className="mt-2 flex justify-end gap-2">
 						<button
@@ -365,11 +375,11 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 							</div>
 
 							<div className="w-5 shrink-0">
-								{isOverridden(key) && (
+								{overriddenKeys.has(key) && (
 									<button
 										type="button"
 										className="text-override hover:text-override/80"
-										title="Reset to original"
+										aria-label="Reset to original"
 										onClick={() => {
 											handleReset(key)
 										}}>
@@ -404,8 +414,8 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 									<div className="w-5 shrink-0">
 										<button
 											type="button"
-											className="text-red-400 hover:text-red-300"
-											title="Remove attribute"
+											className="text-panel-error hover:text-panel-error/80"
+											aria-label="Remove attribute"
 											onClick={() => {
 												handleDeleteCustom(key)
 											}}>
@@ -471,6 +481,7 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 
 							<button
 								type="button"
+								aria-label="Cancel"
 								className="text-sm text-panel-text-secondary hover:text-panel-text"
 								onClick={() => {
 									setShowAddForm(false)

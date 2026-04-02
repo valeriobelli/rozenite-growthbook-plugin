@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import CreatableSelect from 'react-select/creatable'
 
 import type { SelectOption } from './select-styles'
@@ -9,7 +10,7 @@ interface NumberArrayInputProps {
 }
 
 export const NumberArrayInput = ({ onChange, value }: NumberArrayInputProps) => {
-	const selectValue = value.map((v) => ({ label: v.toString(), value: v.toString() }))
+	const selectValue = useMemo(() => value.map((v) => ({ label: v.toString(), value: v.toString() })), [value])
 
 	return (
 		<CreatableSelect<SelectOption, true>

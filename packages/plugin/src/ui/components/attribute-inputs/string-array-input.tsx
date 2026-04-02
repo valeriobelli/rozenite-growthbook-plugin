@@ -1,10 +1,11 @@
+import { useMemo } from 'react'
 import CreatableSelect from 'react-select/creatable'
 
 import { selectStyles } from './select-styles'
 import type { SelectOption } from './select-styles'
 
 export const StringArrayInput = ({ onChange, value }: { onChange: (value: string[]) => void; value: string[] }) => {
-	const selectValue = value.map((v) => ({ label: v, value: v }))
+	const selectValue = useMemo(() => value.map((v) => ({ label: v, value: v })), [value])
 
 	return (
 		<CreatableSelect<SelectOption, true>

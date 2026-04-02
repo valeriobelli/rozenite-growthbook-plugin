@@ -40,6 +40,7 @@ export const ExperimentsTab = ({
 			<div className="mb-3 flex items-center gap-3">
 				<input
 					type="text"
+					aria-label="Filter experiments"
 					placeholder="Filter experiments..."
 					className="flex-1 rounded border border-panel-border bg-panel-surface px-3 py-1.5 text-sm text-panel-text placeholder:text-panel-text-secondary"
 					value={search}

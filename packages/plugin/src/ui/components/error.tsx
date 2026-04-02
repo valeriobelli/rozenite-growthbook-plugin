@@ -49,7 +49,7 @@ export const ErrorFallback = ({ error, onReset }: ErrorFallbackProps) => {
 	const technicalError = getTechnicalErrorDetails(error)
 
 	return (
-		<div className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center text-red-400">
+		<div className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center text-panel-error">
 			<h1 className="text-2xl font-bold">An error occurred while receiving data from GrowthBook</h1>
 
 			<p className="max-w-2xl text-sm text-panel-text-secondary">{technicalError.message}</p>
@@ -65,7 +65,7 @@ export const ErrorFallback = ({ error, onReset }: ErrorFallbackProps) => {
 			</details>
 
 			<button
-				className="rounded bg-red-500 px-4 py-2 text-white"
+				className="rounded bg-panel-error px-4 py-2 text-panel-bg"
 				onClick={() => {
 					onReset?.()
 					resetBoundary()

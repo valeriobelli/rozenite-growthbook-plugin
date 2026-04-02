@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import CreatableSelect from 'react-select/creatable'
 
 import type { SelectOption } from './select-styles'
@@ -10,13 +11,15 @@ interface EnumInputProps {
 }
 
 export const EnumInput = ({ onChange, options, value }: EnumInputProps) => {
-	const selectOptions: SelectOption[] = options.map((o) => ({ label: o, value: o }))
+	const selectOptions = useMemo<SelectOption[]>(() => options.map((o) => ({ label: o, value: o })), [options])
+
+	const selectValue = useMemo(() => ({ label: value, value }), [value])
 
 	return (
 		<CreatableSelect<SelectOption>
 			styles={selectStyles}
 			options={selectOptions}
-			value={{ label: value, value }}
+			value={selectValue}
 			onChange={(opt) => {
 				onChange(opt ? opt.value : '')
 			}}
