@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { type } from 'arktype'
 
-import { invariant } from '../../../shared/utils'
+import { invariant } from '../../../../shared/utils'
 
-import { ArchetypesResponse, AttributeSchemaResponse } from './codecs'
+import { ArchetypesResponse, AttributesResponse } from './codecs'
 
 const fetchArchetypes = async (apiHost: string, apiKey: string) => {
 	const response = await fetch(`${apiHost}/api/v1/archetypes`, {
@@ -30,7 +30,7 @@ const fetchAttributeSchema = async (apiHost: string, apiKey: string) => {
 		throw new Error(`HTTP ${response.status}`)
 	}
 
-	const data = AttributeSchemaResponse(await response.json())
+	const data = AttributesResponse(await response.json())
 
 	invariant(!(data instanceof type.errors), 'Invalid attribute schema response')
 
@@ -43,13 +43,13 @@ export const useGrowthBookApi = ({ apiHost, apiKey }: { apiHost: string; apiKey:
 		queryKey: ['archetypes', apiHost, apiKey],
 	})
 
-	const attributeSchemaQuery = useSuspenseQuery({
+	const attributesQuery = useSuspenseQuery({
 		queryFn: () => fetchAttributeSchema(apiHost, apiKey),
-		queryKey: ['attribute-schema', apiHost, apiKey],
+		queryKey: ['attributes', apiHost, apiKey],
 	})
 
 	return {
 		archetypes: archetypesQuery.data,
-		attributeSchema: attributeSchemaQuery.data,
+		attributes: attributesQuery.data,
 	}
 }

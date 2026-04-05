@@ -1,6 +1,6 @@
 import { type } from 'arktype'
 
-export const Archetype = type({
+export const SDKArchetype = type({
 	attributes: 'Record<string, unknown>',
 	'description?': 'string',
 	id: 'string',
@@ -15,12 +15,12 @@ export const SDKAttribute = type({
 })
 
 export const ArchetypesResponse = type({
-	archetypes: Archetype.array(),
+	archetypes: SDKArchetype.array(),
 })
 
-export const AttributeSchemaResponse = type({
+export const AttributesResponse = type({
 	attributes: SDKAttribute.array(),
 })
 
-export type Archetype = typeof Archetype.infer
+export type SDKArchetype = typeof SDKArchetype.infer
 export type SDKAttribute = typeof SDKAttribute.infer

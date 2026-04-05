@@ -17,7 +17,8 @@ import { Loader } from './components/loader'
 import { LogsTab } from './components/logs-tab'
 import { SdkInfoTab } from './components/sdk-info-tab'
 import { SettingsTab } from './components/settings-tab'
-import { TabBar, type TabId } from './components/tab-bar'
+import type { TabId } from './components/tab-bar'
+import { TabBar } from './components/tab-bar'
 import './globals.css'
 
 const queryClient = new QueryClient({
