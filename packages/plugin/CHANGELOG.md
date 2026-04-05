@@ -1,5 +1,11 @@
 # rozenite-growthbook-plugin
 
+## 0.6.0
+
+### Minor Changes
+
+- 8878885: Split AttributesTab components to enhance tab performance
+
 ## 0.5.0
 
 ### Minor Changes
