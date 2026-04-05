@@ -1,41 +1,38 @@
 import type { PropsWithChildren, ReactNode } from 'react'
 import { createContext, useContext, useMemo } from 'react'
 
-import { invariant } from '../../../shared/utils'
-import { useApiKey, useIsCloud } from '../../atoms'
-import { CLOUD_API_HOST } from '../../constants'
+import { invariant } from '../../../../shared/utils'
+import { useApiKey, useIsCloud } from '../../../atoms'
+import { CLOUD_API_HOST } from '../../../constants'
 
-import type { Archetype, SDKAttribute } from './codecs'
+import type { SDKArchetype, SDKAttribute } from './codecs'
 import { useGrowthBookApi } from './hooks'
 
 type DataProviderContextType = {
-	archetypes: Archetype[]
-	attributeSchema: SDKAttribute[]
+	sdkArchetypes: SDKArchetype[]
+	sdkAttributes: SDKAttribute[]
 }
 
 const Context = createContext<DataProviderContextType | null>(null)
 
-const DefaultDataProvider = ({ children }: PropsWithChildren) => {
-	const value = useMemo(
-		() => ({
-			archetypes: [],
-			attributeSchema: [],
-		}),
-		[]
-	)
+const defaultValue: DataProviderContextType = {
+	sdkArchetypes: [],
+	sdkAttributes: [],
+}
 
-	return <Context.Provider value={value}>{children}</Context.Provider>
+function DefaultDataProvider({ children }: PropsWithChildren) {
+	return <Context.Provider value={defaultValue}>{children}</Context.Provider>
 }
 
 const ApiDataProvider = ({ apiKey, apiHost, children }: PropsWithChildren<{ apiHost: string; apiKey: string }>) => {
-	const { archetypes, attributeSchema } = useGrowthBookApi({ apiHost, apiKey })
+	const { archetypes, attributes } = useGrowthBookApi({ apiHost, apiKey })
 
 	const value = useMemo(
 		() => ({
-			archetypes,
-			attributeSchema,
+			sdkArchetypes: archetypes,
+			sdkAttributes: attributes,
 		}),
-		[archetypes, attributeSchema]
+		[archetypes, attributes]
 	)
 
 	return <Context.Provider value={value}>{children}</Context.Provider>
