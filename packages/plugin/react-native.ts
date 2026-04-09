@@ -1,6 +1,6 @@
-import type { GrowthBookDevToolsOptions } from './src/react-native/use-growthbook-devtools'
+import type { GrowthBookInstance } from './src/react-native/use-growthbook-devtools'
 
-type UseGrowthBookDevTools = (options: GrowthBookDevToolsOptions) => void
+type UseGrowthBookDevTools = (gb: GrowthBookInstance) => void
 
 const isDev = process.env.NODE_ENV !== 'production'
 const isServer = typeof window === 'undefined'

@@ -27,7 +27,7 @@ import { useGrowthBookDevTools } from 'rozenite-growthbook-plugin'
 function DevToolsBridge() {
   const gb = useGrowthBook()
 
-  useGrowthBookDevTools({ gb })
+  useGrowthBookDevTools(gb)
 
   return null
 }

@@ -59,7 +59,7 @@ const gb = new GrowthBook({
 })
 
 function DevToolsBridge() {
-	useGrowthBookDevTools({ gb })
+	useGrowthBookDevTools(gb)
 
 	return null
 }

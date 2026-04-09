@@ -60,12 +60,6 @@ export interface GrowthBookInstance {
 	subscribe?: (callback: (experiment?: unknown, result?: unknown) => void) => () => void
 }
 
-export type GrowthBookDevToolsOptions = {
-	gb: GrowthBookInstance
-}
-
-let logIdCounter = 0
-
 const buildFeatureSnapshots = (gb: GrowthBookInstance): FeatureSnapshot[] =>
 	Object.keys(gb.getFeatures()).map((key) => {
 		const result = gb.evalFeature(key)
@@ -111,15 +105,17 @@ const buildSdkInfo = (gb: GrowthBookInstance): SdkInfoSnapshot => {
 const serializeForcedFeatures = (map: Map<string, unknown>): Record<string, unknown> =>
 	Object.fromEntries(map.entries())
 
+let logIdCounter = 0
+
 const buildDebugLogsFromSnapshots = (features: FeatureSnapshot[], timestamp: number): DebugLogEntry[] =>
-	features.map((f) => ({
-		featureKey: f.key,
+	features.map((feature) => ({
+		featureKey: feature.key,
 		id: `log-${++logIdCounter}`,
 		result: {
-			on: f.on,
-			ruleId: f.ruleId,
-			source: f.source,
-			value: f.value,
+			on: feature.on,
+			ruleId: feature.ruleId,
+			source: feature.source,
+			value: feature.value,
 		},
 		timestamp,
 	}))
@@ -143,7 +139,7 @@ const buildSnapshot = (
 	}
 }
 
-export const useGrowthBookDevTools = ({ gb }: GrowthBookDevToolsOptions) => {
+export const useGrowthBookDevTools = (gb: GrowthBookInstance) => {
 	const client = useRozeniteDevToolsClient<GrowthBookEventMap>({ pluginId: PLUGIN_ID })
 
 	const debugLogsRef = useRef<DebugLogEntry[]>([])
