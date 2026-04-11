@@ -1,5 +1,13 @@
 # rozenite-growthbook-plugin
 
+## 0.6.0
+
+### Minor Changes
+
+- e689cb8: Split AttributesTab components to enhance tab performance
+- e443c30: Decode and show correct input type for unknown attribute types
+- ea57da7: Simplify useGrowthBookDevTools interface
+
 ## 0.5.0
 
 ### Minor Changes
