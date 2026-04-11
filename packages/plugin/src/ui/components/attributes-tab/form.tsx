@@ -65,10 +65,51 @@ function AttributeInput({ attrKey, onChange, schemaAttr, value }: AttributeInput
 		return <NumberArrayInput onChange={onChange} value={items} />
 	}
 
-	const parsed = stringSchema(value)
-	const strValue = parsed instanceof type.errors ? '' : parsed
+	if (dataType === 'string' || dataType === 'secureString') {
+		const parsed = stringSchema(value)
+		const strValue = parsed instanceof type.errors ? '' : parsed
 
-	return <TextInput key={`${attrKey}-${strValue}`} initialValue={strValue} onBlurSave={onChange} />
+		return <TextInput key={`${attrKey}-${strValue}`} initialValue={strValue} onBlurSave={onChange} />
+	}
+
+	if (typeof value === 'boolean') {
+		const parsed = booleanSchema(value)
+		const checked = parsed instanceof type.errors ? false : parsed
+
+		return <BooleanInput checked={checked} onChange={onChange} />
+	}
+
+	if (typeof value === 'number') {
+		const parsed = numberSchema(value)
+		const numValue = parsed instanceof type.errors ? 0 : parsed
+
+		return <NumberInput key={`${attrKey}-${numValue}`} initialValue={numValue.toString()} onChange={onChange} />
+	}
+
+	if (Array.isArray(value)) {
+		const parsedAsNumArray = numberArraySchema(value)
+
+		if (!(parsedAsNumArray instanceof type.errors)) {
+			return <NumberArrayInput onChange={onChange} value={parsedAsNumArray} />
+		}
+
+		const parsedAsStrArray = stringArraySchema(value)
+		const items = parsedAsStrArray instanceof type.errors ? [] : parsedAsStrArray
+
+		return <StringArrayInput onChange={onChange} value={items} />
+	}
+
+	const strValue = typeof value === 'string' ? value : (JSON.stringify(value) ?? '')
+
+	const handleChange = (inputValue: string) => {
+		try {
+			onChange(JSON.parse(inputValue))
+		} catch {
+			onChange(inputValue)
+		}
+	}
+
+	return <TextInput key={`${attrKey}-${strValue}`} initialValue={strValue} onBlurSave={handleChange} />
 }
 
 interface AttributesTabFormProps {
