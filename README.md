@@ -1,8 +1,13 @@
+
 # rozenite-growthbook-plugin
 
 A [Rozenite](https://rozenite.com) DevTools plugin for debugging [GrowthBook](https://www.growthbook.io) feature flags and experiments in React Native apps.
 
 Inspect features, override values, force experiment variations, and edit user attributes; all from the Rozenite DevTools panel.
+
+<p align="center">
+<img alt="Demo" src="https://github.com/user-attachments/assets/8e0356d0-269e-4f8e-89e4-f42f7ba56e9d" />
+</p>
 
 ## Installation
 
