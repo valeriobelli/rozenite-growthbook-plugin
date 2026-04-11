@@ -3,7 +3,7 @@
     "name": "GrowthBook Plugin Example",
     "slug": "growthbook-plugin-example",
     "version": "1.0.0",
-    "sdkVersion": "53.0.0",
+    "sdkVersion": "55.0.0",
     "platforms": ["ios", "android"],
     "ios": {
       "bundleIdentifier": "com.example.growthbookplugin"
