@@ -16,23 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          package_json_file: ./package.json
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ".node-version"
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup
+        uses: ./.github/actions/setup
       - name: Check format
         run: pnpm format:check
-      - name: Lint
-        run: pnpm lint --format github
       - name: Check for unused exports and dependencies
         run: pnpm knip
-      - name: Typecheck
-        run: pnpm typecheck
+      - name: Required checks
+        uses: ./.github/actions/required-checks

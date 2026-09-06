@@ -42,6 +42,7 @@ export const LogsTab = ({ logs, onClear }: LogsTabProps) => {
 		}
 
 		el.scrollTop = el.scrollHeight
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies
 	}, [filteredLogs.length])
 
 	return (

@@ -146,7 +146,7 @@ export const useGrowthBookDevTools = (gb: GrowthBookInstance) => {
 
 	useEffect(() => {
 		if (!client) {
-			return
+			return () => {}
 		}
 
 		let isSyncing = false
@@ -176,23 +176,27 @@ export const useGrowthBookDevTools = (gb: GrowthBookInstance) => {
 			isSyncing = false
 		}
 
+		// oxlint-disable-next-line react/immutability
 		gb.debug = true
 
 		// Patch public state-mutating methods so any SDK state change notifies devtools
 		// immediately, without depending on gb.subscribe (which only fires on experiment evaluation)
 		const originalSetAttributes = gb.setAttributes.bind(gb)
+
 		gb.setAttributes = async (attrs) => {
 			await originalSetAttributes(attrs)
 			handleStateChange()
 		}
 
 		const originalSetForcedFeatures = gb.setForcedFeatures.bind(gb)
+
 		gb.setForcedFeatures = (map) => {
 			originalSetForcedFeatures(map)
 			handleStateChange()
 		}
 
 		const originalSetForcedVariations = gb.setForcedVariations.bind(gb)
+
 		gb.setForcedVariations = async (vars) => {
 			await originalSetForcedVariations(vars)
 			handleStateChange()

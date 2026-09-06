@@ -1,8 +1,9 @@
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
-import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
+import { Suspense, useCallback, useMemo, useState } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 
+import { assertNever } from '../../../shared/utils'
 import { ErrorFallback as BaseErrorFallback } from '../error'
 import { Loader } from '../loader'
 
@@ -34,6 +35,8 @@ const defaultValueForType = (datatype: SDKAttribute['datatype']) => {
 		case 'secureString[]':
 		case 'number[]':
 			return []
+		default:
+			return assertNever(datatype)
 	}
 }
 
@@ -44,19 +47,19 @@ const ErrorFallback = (props: FallbackProps) => {
 }
 
 const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
-	const originalAttributesRef = useRef(attributes)
+	const [originalAttributes, setOriginalAttributes] = useState(attributes)
 	const [customAttributeKeys, setCustomAttributeKeys] = useState(new Set<string>())
 	const [jsonMode, setJsonMode] = useState(false)
 
 	const { sdkArchetypes, sdkAttributes } = useData()
 
 	const overriddenKeys = useMemo(() => {
-		const original = originalAttributesRef.current
+		const original = originalAttributes
 
 		return new Set(
 			Object.keys(attributes).filter((key) => JSON.stringify(attributes[key]) !== JSON.stringify(original[key]))
 		)
-	}, [attributes])
+	}, [attributes, originalAttributes])
 
 	const hasOverrides = overriddenKeys.size > 0
 
@@ -71,21 +74,23 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 		(key: string) => {
 			const next = { ...attributes }
 
-			if (key in originalAttributesRef.current) {
-				next[key] = originalAttributesRef.current[key]
+			if (key in originalAttributes) {
+				next[key] = originalAttributes[key]
 			} else {
 				delete next[key]
 			}
 
+			setOriginalAttributes(next)
+
 			onSave(next)
 		},
-		[attributes, onSave]
+		[attributes, onSave, originalAttributes]
 	)
 
 	const handleClearOverrides = useCallback(() => {
-		onSave(originalAttributesRef.current)
+		onSave(originalAttributes)
 		setCustomAttributeKeys(new Set())
-	}, [onSave])
+	}, [onSave, originalAttributes])
 
 	const handleDeleteCustom = useCallback(
 		(key: string) => {
@@ -130,13 +135,13 @@ const AttributesTabInner = ({ attributes, onSave }: AttributesTabProps) => {
 
 	const handleJsonApply = useCallback(
 		(result: Record<string, unknown>) => {
-			const newCustomKeys = Object.keys(result).filter((key) => !(key in originalAttributesRef.current))
+			const newCustomKeys = Object.keys(result).filter((key) => !(key in originalAttributes))
 
 			onSave(result)
 			setCustomAttributeKeys(new Set(newCustomKeys))
 			setJsonMode(false)
 		},
-		[onSave]
+		[onSave, originalAttributes]
 	)
 
 	const handleJsonCancel = useCallback(() => {

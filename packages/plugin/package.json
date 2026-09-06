@@ -1,76 +1,75 @@
 {
-  "name": "rozenite-growthbook-plugin",
-  "version": "0.6.0",
-  "description": "Rozenite DevTools plugin for GrowthBook feature flags and experiments",
-  "keywords": [
-    "devtools",
-    "experiments",
-    "feature-flags",
-    "growthbook",
-    "react-native",
-    "rozenite"
-  ],
-  "homepage": "https://github.com/valeriobelli/rozenite-growthbook-plugin",
-  "bugs": {
-    "url": "https://github.com/valeriobelli/rozenite-growthbook-plugin/issues"
-  },
-  "license": "MIT",
-  "author": "Valerio Belli",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/valeriobelli/rozenite-growthbook-plugin.git"
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/react-native.cjs",
-  "module": "./dist/react-native.js",
-  "types": "./dist/react-native.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/react-native.d.ts",
-      "import": "./dist/react-native.js",
-      "require": "./dist/react-native.cjs"
-    }
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "build": "rozenite build",
-    "dev": "rozenite dev",
-    "lint": "oxlint -c ../../.oxlintrc.json ./src",
-    "fmt": "oxfmt ./src",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@rozenite/plugin-bridge": "^1.0.0",
-    "@tanstack/query-async-storage-persister": "^5.0.0",
-    "@tanstack/react-query": "^5.0.0",
-    "@tanstack/react-query-persist-client": "^5.0.0",
-    "arktype": "^2.0.0",
-    "jotai": "^2.0.0",
-    "react-error-boundary": "^6.0.0",
-    "react-select": "^5.0.0"
-  },
-  "devDependencies": {
-    "@rozenite/vite-plugin": "^1.6.0",
-    "@types/react": "^19.2.14",
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-native": "0.84.1",
-    "react-native-web": "^0.21.2",
-    "rozenite": "^1.7.0",
-    "tailwindcss": "^3.4.19",
-    "typescript": "~5.9.3",
-    "vite": "^7.3.1"
-  },
-  "peerDependencies": {
-    "@growthbook/growthbook": "^1.0.0",
-    "react": "*",
-    "react-native": "*"
-  }
+	"name": "rozenite-growthbook-plugin",
+	"version": "0.6.0",
+	"description": "Rozenite DevTools plugin for GrowthBook feature flags and experiments",
+	"keywords": [
+		"devtools",
+		"experiments",
+		"feature-flags",
+		"growthbook",
+		"react-native",
+		"rozenite"
+	],
+	"homepage": "https://github.com/valeriobelli/rozenite-growthbook-plugin",
+	"bugs": {
+		"url": "https://github.com/valeriobelli/rozenite-growthbook-plugin/issues"
+	},
+	"license": "MIT",
+	"author": "Valerio Belli",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/valeriobelli/rozenite-growthbook-plugin.git"
+	},
+	"files": [
+		"dist"
+	],
+	"main": "./dist/react-native/cjs/react-native.js",
+	"module": "./dist/react-native/react-native.js",
+	"types": "./dist/react-native/react-native.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/react-native/react-native.d.ts",
+			"import": "./dist/react-native/react-native.js",
+			"require": "./dist/react-native/cjs/react-native.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"scripts": {
+		"build": "rozenite build",
+		"dev": "rozenite dev",
+		"lint": "oxlint -c ../../.oxlintrc.json ./src",
+		"fmt": "oxfmt ./src",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@rozenite/plugin-bridge": "catalog:",
+		"@tanstack/query-async-storage-persister": "^5.0.0",
+		"@tanstack/react-query": "^5.0.0",
+		"@tanstack/react-query-persist-client": "^5.0.0",
+		"arktype": "^2.0.0",
+		"jotai": "^2.0.0",
+		"react-error-boundary": "^6.0.0",
+		"react-select": "^5.0.0"
+	},
+	"devDependencies": {
+		"@rozenite/vite-plugin": "catalog:",
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
+		"react-native": "~0.86.0",
+		"react-native-web": "^0.21.2",
+		"rozenite": "catalog:",
+		"tailwindcss": "4.2.2",
+		"vite": "^7.3.1"
+	},
+	"peerDependencies": {
+		"@growthbook/growthbook": "^1.0.0",
+		"react": "*",
+		"react-native": "*"
+	}
 }

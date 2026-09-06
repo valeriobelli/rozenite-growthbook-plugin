@@ -5,39 +5,83 @@ on:
     branches:
       - main
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
+  select-mode:
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
+      publish-plan-artifact-id: ${{ steps.select-mode.outputs.publish-plan-artifact-id }}
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read # to checkout repo (actions/checkout)
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Checkout repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version-file: ".node-version"
-          cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          persist-credentials: false
 
-      - name: Build project
-        run: pnpm build
-      - name: Create Release Pull Request or Publish
-        uses: changesets/action@v1
-        with:
-          publish: pnpm changeset publish
-          title: "Prepare release"
-          commit: "build: version packages"
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Required checks
+        uses: ./.github/actions/required-checks
+
+      - name: Select Changesets mode
+        id: select-mode
+        uses: changesets/action/select-mode@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  version:
+    if: needs.select-mode.outputs.mode == 'version'
+    needs: select-mode
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      version-dir-artifact-id: ${{ steps.version.outputs.version-dir-artifact-id }}
+    permissions:
+      contents: write # to checkout repo (actions/checkout) and commit version changes (changesets/action/version)
+      pull-requests: write # to create pull request (changesets/action/version)
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # Changesets walks the history to find the commits that added each changeset; a shallow clone would make it run `git fetch --deepen`, which has no credentials
+          persist-credentials: false
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          cache: false
+
+      - name: Version packages
+        id: version
+        uses: changesets/action/version@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+
+  publish:
+    if: needs.select-mode.outputs.mode == 'publish'
+    needs: select-mode
+    runs-on: 2x-ubuntu24-arm
+    permissions:
+      contents: write # to checkout repo (actions/checkout) and to create releases (changesets/action/publish)
+    steps:
+      - name: Checkout repo # zizmor: ignore[persist-credentials, artipacked] this is necessary for the release
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # Changesets walks the history to find the commits that added each changeset; a shallow clone would make it run `git fetch --deepen`, which has no credentials
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          cache: false
+
+      - name: Build packages
+        run: pnpm --filter rozenite-growthbook-plugin build
+
+      - name: Publish packages
+        uses: changesets/action/publish@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

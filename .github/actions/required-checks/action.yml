@@ -1,0 +1,12 @@
+name: Static checks
+description: Runs the required static checks for the project.
+
+runs:
+  using: composite
+  steps:
+    - name: Lint
+      shell: bash
+      run: pnpm lint --format github
+    - name: Typecheck
+      shell: bash
+      run: pnpm typecheck
