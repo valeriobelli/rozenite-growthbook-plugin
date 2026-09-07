@@ -2,12 +2,8 @@ import type { KnipConfig } from 'knip'
 
 const config: KnipConfig = {
 	workspaces: {
-		'.': {
-			entry: ['commitlint.config.mts'],
-			ignoreDependencies: ['@commitlint/config-conventional'],
-		},
 		example: {
-			entry: ['src/App.tsx', 'metro.config.js'],
+			entry: ['src/App.tsx'],
 			ignoreDependencies: ['@babel/core', 'expo-updates'],
 			project: ['src/**/*.{ts,tsx}', '*.{js,ts}'],
 		},
@@ -18,7 +14,7 @@ const config: KnipConfig = {
 				'src/ui/panel.tsx',
 				'src/react-native/use-growthbook-devtools.ts',
 			],
-			ignoreDependencies: ['react-native', 'react-native-web'],
+			ignoreDependencies: ['react-native', 'react-native-web', 'tailwindcss'],
 			project: ['src/**/*.{ts,tsx}', '*.{ts,mts}'],
 		},
 	},

@@ -9,20 +9,19 @@
     "ios": "WITH_ROZENITE=true expo run:ios"
   },
   "dependencies": {
-    "@growthbook/growthbook-react": "^1.6.5",
-    "expo": "~55.0.14",
-    "react": "19.2.3",
-    "react-native": "~0.83.1",
-    "react-native-nitro-modules": "^0.35.2",
-    "react-native-quick-base64": "2.2.2",
-    "react-native-quick-crypto": "1.0.18",
-    "react-native-safe-area-context": "5.6.2",
+    "@growthbook/growthbook-react": "^1.7.0",
+    "expo": "~57.0.13",
+    "react": "catalog:",
+    "react-native": "~0.86.0",
+    "react-native-nitro-modules": "^0.36.5",
+    "react-native-quick-base64": "^3.0.0",
+    "react-native-quick-crypto": "1.1.7",
+    "react-native-safe-area-context": "5.7.0",
     "rozenite-growthbook-plugin": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@rozenite/metro": "^1.7.0",
-    "@types/react": "^19.2.14",
-    "typescript": "~5.9.3"
+    "@rozenite/metro": "catalog:",
+    "@types/react": "catalog:"
   }
 }

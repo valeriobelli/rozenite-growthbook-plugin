@@ -1,5 +1,10 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { rozenitePlugin } from '@rozenite/vite-plugin'
 import { defineConfig } from 'vite'
+
+const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
 	base: './',
@@ -10,6 +15,6 @@ export default defineConfig({
 		reportCompressedSize: false,
 		sourcemap: false,
 	},
-	plugins: [rozenitePlugin()],
-	root: __dirname,
+	plugins: [rozenitePlugin({ tailwind: true })],
+	root: dirname,
 })

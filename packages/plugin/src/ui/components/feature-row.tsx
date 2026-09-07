@@ -104,8 +104,8 @@ export const FeatureRow = ({
 									displayValue ? 'bg-panel-success' : 'bg-panel-border'
 								}`}>
 								<span
-									className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white transition-transform ${
-										displayValue ? 'translate-x-4' : 'translate-x-0.5'
+									className={`absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-white transition-transform ${
+										displayValue ? 'translate-x-4' : 'translate-x-0'
 									}`}
 								/>
 							</span>

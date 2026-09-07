@@ -3,3 +3,5 @@ node_modules/
 *.tsbuildinfo
 .DS_Store
 .claude/settings.local.json
+.serena
+.rozenite

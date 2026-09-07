@@ -45,7 +45,7 @@ const Panel = () => {
 
 	useEffect(() => {
 		if (!client) {
-			return
+			return () => {}
 		}
 
 		let received = false

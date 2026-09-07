@@ -1,4 +1,4 @@
-export type SerializedFeatureRule = {
+type SerializedFeatureRule = {
 	id?: string
 	type: 'force' | 'experiment' | 'rollout'
 	coverage?: number
