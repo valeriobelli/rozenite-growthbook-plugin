@@ -33,8 +33,6 @@ jobs:
       - name: Select Changesets mode
         id: select-mode
         uses: changesets/action/select-mode@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   version:
     if: needs.select-mode.outputs.mode == 'version'
@@ -64,8 +62,10 @@ jobs:
   publish:
     if: needs.select-mode.outputs.mode == 'publish'
     needs: select-mode
-    runs-on: 2x-ubuntu24-arm
+    runs-on: ubuntu-24.04-arm
+    environment: Release
     permissions:
+      id-token: write # Required for OIDC
       contents: write # to checkout repo (actions/checkout) and to create releases (changesets/action/publish)
     steps:
       - name: Checkout repo # zizmor: ignore[persist-credentials, artipacked] this is necessary for the release
@@ -77,11 +77,10 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cache: false
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Build packages
         run: pnpm --filter rozenite-growthbook-plugin build
 
       - name: Publish packages
         uses: changesets/action/publish@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

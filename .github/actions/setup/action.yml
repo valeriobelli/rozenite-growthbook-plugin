@@ -6,6 +6,9 @@ inputs:
     description: Whether to restore and save the pnpm store cache.
     required: false
     default: 'false'
+  registry-url:
+    description: The registry URL to use for Node.js.
+    required: false
 
 runs:
   using: composite
@@ -17,6 +20,7 @@ runs:
       uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
         node-version-file: .node-version
+        registry-url: ${{ inputs.registry-url }}
         cache: ${{ inputs.cache == 'true' && 'pnpm' || '' }}
 
     - name: Install dependencies
