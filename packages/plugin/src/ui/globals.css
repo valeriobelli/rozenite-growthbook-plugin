@@ -7,8 +7,12 @@
   --color-panel-surface: #222240;
   --color-panel-border: #333355;
   --color-panel-text: #e0e0f0;
-  --color-panel-text-secondary: #8888aa;
-  --color-panel-accent: #6366f1;
+  /* Lightened from #8888aa, which measured 4.49:1 on --color-panel-surface and
+     so missed AA for the 13px body size this token is used at. */
+  --color-panel-text-secondary: #8d8dad;
+  /* Darkened from #6366f1: the accent carries white 12px button labels, which
+     measured 4.47:1 against it. This keeps the hue and clears AA. */
+  --color-panel-accent: #6164ec;
   --color-panel-success: #4ade80;
   --color-panel-success-bg: rgba(74, 222, 128, 0.1);
   --color-panel-error: #f87171;
@@ -18,7 +22,9 @@
   --color-override-bg: rgba(240, 136, 62, 0.1);
 
   --color-value-boolean: #d2a8ff;
-  --color-value-null: #6a737d;
+  /* GitHub's muted grey measured 3.18:1 on the surface, unreadable at the JSON
+     viewer's 12px monospace. Lightened while staying the dimmest value colour. */
+  --color-value-null: #888f97;
   --color-value-number: #79b8ff;
   --color-value-object: #e8b656;
   --color-value-string: #a8db8f;
@@ -52,6 +58,24 @@
     /* antialiasing improves sharpness on dark backgrounds */
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-panel-accent);
+    outline-offset: 1px;
+  }
+}
+
+/* Unlayered, like the scrollbar rules below, so it also overrides the
+   transition utilities the rows and the toggle set. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -2,14 +2,13 @@ import { useRozeniteDevToolsClient } from '@rozenite/plugin-bridge'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { PLUGIN_ID } from '../shared/constants'
+import { MAX_DEBUG_LOGS, PLUGIN_ID } from '../shared/constants'
 import type { GrowthBookEventMap } from '../shared/event-map'
 import type { DebugLogEntry, GrowthBookSnapshot } from '../shared/types'
 
-import { AttributesTab } from './components/attributes-tab'
 import { ErrorFallback } from './components/error'
 import { ExperimentsTab } from './components/experiments-tab'
 import { FeaturesTab } from './components/features-tab'
@@ -20,6 +19,12 @@ import { SettingsTab } from './components/settings-tab'
 import type { TabId } from './components/tab-bar'
 import { TabBar } from './components/tab-bar'
 import './globals.css'
+
+// react-select and arktype are reachable only from this tab, and the panel opens
+// on Features, so a static import would put both in the first chunk.
+const AttributesTab = lazy(async () => ({
+	default: (await import('./components/attributes-tab')).AttributesTab,
+}))
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -61,10 +66,10 @@ const Panel = () => {
 				setSnapshot(data)
 			}),
 			client.onMessage('gb:debug-log', (entry) => {
-				setDebugLogs((prev) => prev.concat(entry))
+				setDebugLogs((prev) => prev.concat(entry).slice(-MAX_DEBUG_LOGS))
 			}),
 			client.onMessage('gb:debug-logs-batch', (entries) => {
-				setDebugLogs((prev) => prev.concat(entries))
+				setDebugLogs((prev) => prev.concat(entries).slice(-MAX_DEBUG_LOGS))
 			}),
 		]
 
@@ -94,7 +99,7 @@ const Panel = () => {
 	}
 
 	if (!snapshot) {
-		return <Loader>Waiting for app sending GrowthBook data...</Loader>
+		return <Loader>Waiting for GrowthBook data from the app...</Loader>
 	}
 
 	return (
@@ -135,13 +140,15 @@ const Panel = () => {
 					/>
 				)}
 				{activeTab === 'attributes' && (
-					<AttributesTab
-						apiHost={snapshot.sdkInfo.apiHost}
-						attributes={snapshot.attributes}
-						onSave={(attributes) => {
-							client.send('gb:set-attributes', { attributes })
-						}}
-					/>
+					<Suspense fallback={<Loader>Loading attributes...</Loader>}>
+						<AttributesTab
+							apiHost={snapshot.sdkInfo.apiHost}
+							attributes={snapshot.attributes}
+							onSave={(attributes) => {
+								client.send('gb:set-attributes', { attributes })
+							}}
+						/>
+					</Suspense>
 				)}
 				{activeTab === 'logs' && (
 					<LogsTab
