@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 67ce611a2e4f618d78b18f7dfe783ed2bec2ff01..d03eccdaf5f95f4abe790a107ad3265ecc41f88e 100644
+--- a/package.json
++++ b/package.json
+@@ -27,7 +27,6 @@
+   "exports": {
+     "./package.json": "./package.json",
+     ".": {
+-      "development": "./react-native.ts",
+       "types": "./dist/react-native.d.ts",
+       "import": "./dist/react-native.js",
+       "require": "./dist/react-native.js"
